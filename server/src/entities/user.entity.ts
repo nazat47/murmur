@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from "class-transformer";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -10,6 +11,14 @@ export class User {
 
   @Column()
   email!: string;
+
+  @Column({
+    type: "varchar",
+    length: 100,
+    nullable: false,
+  })
+  @Exclude()
+  password!: string;
 
   @Column({ default: true })
   isActive!: boolean;
