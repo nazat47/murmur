@@ -16,6 +16,9 @@ const config_1 = require("@nestjs/config");
 const jwt_config_1 = require("./config/jwt.config");
 const jwt_1 = require("@nestjs/jwt");
 const user_module_1 = require("./user/user.module");
+const murmur_entity_1 = require("./entities/murmur.entity");
+const murmur_module_1 = require("./murmur/murmur.module");
+const pagination_module_1 = require("./common/pagination/pagination.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -23,6 +26,8 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             user_module_1.UserModule,
+            murmur_module_1.MurmurModule,
+            pagination_module_1.PaginationModule,
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 envFilePath: ".env",
@@ -35,7 +40,7 @@ exports.AppModule = AppModule = __decorate([
                 username: "root",
                 password: "agent47",
                 database: "murmur",
-                entities: [user_entity_1.User],
+                entities: [user_entity_1.User, murmur_entity_1.Murmur],
                 synchronize: true,
             }),
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),

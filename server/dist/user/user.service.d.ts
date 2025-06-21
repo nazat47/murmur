@@ -13,4 +13,5 @@ export declare class UserService {
     login(signInDto: LoginDto): Promise<{
         accessToken: string;
     }>;
+    findUserById(id: number): Promise<User>;
 }

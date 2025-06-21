@@ -9,43 +9,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
-const class_transformer_1 = require("class-transformer");
+exports.Murmur = void 0;
 const typeorm_1 = require("typeorm");
-const murmur_entity_1 = require("./murmur.entity");
-let User = class User {
+const user_entity_1 = require("./user.entity");
+let Murmur = class Murmur {
 };
-exports.User = User;
+exports.Murmur = Murmur;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], User.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
+], Murmur.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({
+        nullable: false,
         type: "varchar",
         length: 100,
-        nullable: false,
     }),
-    (0, class_transformer_1.Exclude)(),
     __metadata("design:type", String)
-], User.prototype, "password", void 0);
+], Murmur.prototype, "title", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: true }),
-    __metadata("design:type", Boolean)
-], User.prototype, "isActive", void 0);
+    (0, typeorm_1.Column)({
+        nullable: false,
+        type: "text",
+    }),
+    __metadata("design:type", String)
+], Murmur.prototype, "content", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => murmur_entity_1.Murmur, (murmur) => murmur.author),
-    __metadata("design:type", Array)
-], User.prototype, "murmurs", void 0);
-exports.User = User = __decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.murmurs, {
+        eager: true,
+        onDelete: "CASCADE",
+    }),
+    __metadata("design:type", user_entity_1.User)
+], Murmur.prototype, "author", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Murmur.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], Murmur.prototype, "updatedAt", void 0);
+exports.Murmur = Murmur = __decorate([
     (0, typeorm_1.Entity)()
-], User);
-//# sourceMappingURL=user.entity.js.map
+], Murmur);
+//# sourceMappingURL=murmur.entity.js.map

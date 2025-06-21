@@ -1,20 +1,21 @@
 import { Module } from "@nestjs/common";
-import { UserController } from "./user.controller";
-import { UserService } from "./user.service";
-import { BcryptProvider } from "./providers/bcrypt.provider";
-import { TokenProvider } from "./providers/token.provider";
+import { MurmurController } from "./murmur.controller";
+import { MurmurService } from "./murmur.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "src/entities/user.entity";
+import { Murmur } from "src/entities/murmur.entity";
+import { PaginationModule } from "src/common/pagination/pagination.module";
+import { UserModule } from "src/user/user.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
-import { AccessTokenGuard } from "./guards/access-token.guard";
 
 @Module({
-  controllers: [UserController],
-  providers: [UserService, BcryptProvider, TokenProvider, AccessTokenGuard],
-  exports: [UserService, AccessTokenGuard],
+  controllers: [MurmurController],
+  providers: [MurmurService],
+  exports: [MurmurService],
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Murmur]),
+    PaginationModule,
+    UserModule,
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -33,4 +34,4 @@ import { AccessTokenGuard } from "./guards/access-token.guard";
     }),
   ],
 })
-export class UserModule {}
+export class MurmurModule {}

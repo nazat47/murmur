@@ -81,4 +81,24 @@ export class UserService {
       });
     }
   }
+
+  public async findUserById(id: number): Promise<User> {
+    try {
+      const user = await this.userRepo.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      return user;
+    } catch (error) {
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment"
+      );
+    }
+  }
 }

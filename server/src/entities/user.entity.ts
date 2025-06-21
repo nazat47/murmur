@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Murmur } from "./murmur.entity";
 
 @Entity()
 export class User {
@@ -22,4 +23,7 @@ export class User {
 
   @Column({ default: true })
   isActive!: boolean;
+
+  @OneToMany(() => Murmur, (murmur) => murmur.author)
+  murmurs: Murmur[];
 }

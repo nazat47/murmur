@@ -72,6 +72,22 @@ let UserService = class UserService {
             });
         }
     }
+    async findUserById(id) {
+        try {
+            const user = await this.userRepo.findOne({
+                where: {
+                    id,
+                },
+            });
+            if (!user) {
+                throw new common_1.NotFoundException("User not found");
+            }
+            return user;
+        }
+        catch (error) {
+            throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
+        }
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

@@ -6,27 +6,28 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserModule = void 0;
+exports.MurmurModule = void 0;
 const common_1 = require("@nestjs/common");
-const user_controller_1 = require("./user.controller");
-const user_service_1 = require("./user.service");
-const bcrypt_provider_1 = require("./providers/bcrypt.provider");
-const token_provider_1 = require("./providers/token.provider");
+const murmur_controller_1 = require("./murmur.controller");
+const murmur_service_1 = require("./murmur.service");
 const typeorm_1 = require("@nestjs/typeorm");
-const user_entity_1 = require("../entities/user.entity");
+const murmur_entity_1 = require("../entities/murmur.entity");
+const pagination_module_1 = require("../common/pagination/pagination.module");
+const user_module_1 = require("../user/user.module");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
-const access_token_guard_1 = require("./guards/access-token.guard");
-let UserModule = class UserModule {
+let MurmurModule = class MurmurModule {
 };
-exports.UserModule = UserModule;
-exports.UserModule = UserModule = __decorate([
+exports.MurmurModule = MurmurModule;
+exports.MurmurModule = MurmurModule = __decorate([
     (0, common_1.Module)({
-        controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService, bcrypt_provider_1.BcryptProvider, token_provider_1.TokenProvider, access_token_guard_1.AccessTokenGuard],
-        exports: [user_service_1.UserService, access_token_guard_1.AccessTokenGuard],
+        controllers: [murmur_controller_1.MurmurController],
+        providers: [murmur_service_1.MurmurService],
+        exports: [murmur_service_1.MurmurService],
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([murmur_entity_1.Murmur]),
+            pagination_module_1.PaginationModule,
+            user_module_1.UserModule,
             config_1.ConfigModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
@@ -45,5 +46,5 @@ exports.UserModule = UserModule = __decorate([
             }),
         ],
     })
-], UserModule);
-//# sourceMappingURL=user.module.js.map
+], MurmurModule);
+//# sourceMappingURL=murmur.module.js.map
