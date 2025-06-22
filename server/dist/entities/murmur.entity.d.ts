@@ -4,6 +4,7 @@ export declare class Murmur {
     title: string;
     content: string;
     author: User;
+    likedBy: User[];
     createdAt: Date;
     updatedAt: Date;
 }

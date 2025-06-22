@@ -13,6 +13,7 @@ exports.User = void 0;
 const class_transformer_1 = require("class-transformer");
 const typeorm_1 = require("typeorm");
 const murmur_entity_1 = require("./murmur.entity");
+const follow_entity_1 = require("./follow.entity");
 let User = class User {
 };
 exports.User = User;
@@ -45,6 +46,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => murmur_entity_1.Murmur, (murmur) => murmur.author),
     __metadata("design:type", Array)
 ], User.prototype, "murmurs", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => follow_entity_1.Follow, (follow) => follow.followedUser),
+    __metadata("design:type", Array)
+], User.prototype, "followers", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => follow_entity_1.Follow, (follow) => follow.followedBy),
+    __metadata("design:type", Array)
+], User.prototype, "following", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

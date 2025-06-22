@@ -8,7 +8,4 @@ export class CreateMurmurDto {
   @IsNotEmpty()
   @IsString()
   content: string;
-
-  @IsNotEmpty()
-  authorId: string;
 }

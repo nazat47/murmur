@@ -19,17 +19,18 @@ let PaginationProvider = class PaginationProvider {
     constructor(request) {
         this.request = request;
     }
-    async paginateQuery(paginationQuery, repository, findBy, findByValue) {
+    async paginateQuery(paginationQuery, repository, findBy, orderBy) {
         const skip = (paginationQuery.page - 1) * paginationQuery.limit;
         const whereClause = findBy
-            ? { [findBy]: findByValue }
+            ? JSON.parse(findBy)
             : {};
         const results = await repository.find({
             where: whereClause,
             skip,
             take: paginationQuery.limit,
+            order: orderBy ? JSON.parse(orderBy) : undefined,
         });
-        const totalItems = await repository.count();
+        const totalItems = await repository.count({ where: whereClause });
         const totalPages = Math.ceil(totalItems / paginationQuery.limit);
         const next = paginationQuery.page === totalPages
             ? paginationQuery.page

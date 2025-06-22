@@ -19,6 +19,8 @@ const user_module_1 = require("./user/user.module");
 const murmur_entity_1 = require("./entities/murmur.entity");
 const murmur_module_1 = require("./murmur/murmur.module");
 const pagination_module_1 = require("./common/pagination/pagination.module");
+const follow_entity_1 = require("./entities/follow.entity");
+const timeline_entity_1 = require("./entities/timeline.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,13 +39,13 @@ exports.AppModule = AppModule = __decorate([
                 type: "mysql",
                 host: "localhost",
                 port: 3306,
-                username: "root",
-                password: "agent47",
-                database: "murmur",
-                entities: [user_entity_1.User, murmur_entity_1.Murmur],
+                username: "docker",
+                password: "docker",
+                database: "test",
+                entities: [user_entity_1.User, murmur_entity_1.Murmur, follow_entity_1.Follow, timeline_entity_1.Timeline],
                 synchronize: true,
             }),
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, murmur_entity_1.Murmur, follow_entity_1.Follow, timeline_entity_1.Timeline]),
             jwt_1.JwtModule.registerAsync(jwt_config_1.default.asProvider()),
         ],
         controllers: [app_controller_1.AppController],

@@ -17,6 +17,7 @@ const user_entity_1 = require("../entities/user.entity");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
 const access_token_guard_1 = require("./guards/access-token.guard");
+const follow_entity_1 = require("../entities/follow.entity");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -26,7 +27,7 @@ exports.UserModule = UserModule = __decorate([
         providers: [user_service_1.UserService, bcrypt_provider_1.BcryptProvider, token_provider_1.TokenProvider, access_token_guard_1.AccessTokenGuard],
         exports: [user_service_1.UserService, access_token_guard_1.AccessTokenGuard],
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, follow_entity_1.Follow]),
             config_1.ConfigModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],

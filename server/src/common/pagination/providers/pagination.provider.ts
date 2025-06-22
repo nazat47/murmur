@@ -16,20 +16,21 @@ export class PaginationProvider {
     paginationQuery: PaginationQueryDto,
     repository: Repository<T>,
     findBy?: string,
-    findByValue?: string | number
+    orderBy?: string
   ): Promise<Paginated<T>> {
     const skip = (paginationQuery.page! - 1) * paginationQuery.limit!;
     const whereClause: FindOptionsWhere<T> = findBy
-      ? ({ [findBy]: findByValue } as FindOptionsWhere<T>)
+      ? (JSON.parse(findBy) as FindOptionsWhere<T>)
       : {};
 
     const results = await repository.find({
       where: whereClause,
       skip,
       take: paginationQuery.limit,
+      order: orderBy ? JSON.parse(orderBy) : undefined,
     });
 
-    const totalItems = await repository.count();
+    const totalItems = await repository.count({ where: whereClause });
     const totalPages = Math.ceil(totalItems / paginationQuery.limit!);
     const next =
       paginationQuery.page! === totalPages

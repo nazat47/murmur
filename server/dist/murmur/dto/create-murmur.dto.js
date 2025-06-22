@@ -24,8 +24,4 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateMurmurDto.prototype, "content", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateMurmurDto.prototype, "authorId", void 0);
-//# sourceMappingURL=murmur.dto.js.map
+//# sourceMappingURL=create-murmur.dto.js.map

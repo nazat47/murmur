@@ -8,13 +8,14 @@ import { User } from "src/entities/user.entity";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { AccessTokenGuard } from "./guards/access-token.guard";
+import { Follow } from "src/entities/follow.entity";
 
 @Module({
   controllers: [UserController],
   providers: [UserService, BcryptProvider, TokenProvider, AccessTokenGuard],
   exports: [UserService, AccessTokenGuard],
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Follow]),
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

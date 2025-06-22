@@ -5,11 +5,12 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from "@nestjs/common";
 import { MurmurService } from "./murmur.service";
-import { CreateMurmurDto } from "./dto/murmur.dto";
+import { CreateMurmurDto } from "./dto/create-murmur.dto";
 import { AccessTokenGuard } from "src/user/guards/access-token.guard";
 import { ActiveUser } from "src/user/decorators/active-user.decorator";
 import { IActiveUser } from "src/user/interfaces/active-user.interface";
@@ -37,12 +38,18 @@ export class MurmurController {
     return this.murmurService.findAllMurmurs(user, query);
   }
 
-  @Delete("{/:murmurId}")
+  @Delete("/:murmurId")
   @UseGuards(AccessTokenGuard)
   deleteMurmur(
     @ActiveUser() user: IActiveUser,
     @Param("murmurId") murmurId: string
   ) {
     return this.murmurService.deleteMurmur(murmurId, user);
+  }
+
+  @Put("/like/:id")
+  @UseGuards(AccessTokenGuard)
+  toggleLike(@Param("id") murmurId: string, @ActiveUser() user: IActiveUser) {
+    return this.murmurService.toggleLikeMurmur(murmurId, user);
   }
 }

@@ -16,6 +16,7 @@ const pagination_module_1 = require("../common/pagination/pagination.module");
 const user_module_1 = require("../user/user.module");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const timeline_module_1 = require("../timeline/timeline.module");
 let MurmurModule = class MurmurModule {
 };
 exports.MurmurModule = MurmurModule;
@@ -29,6 +30,7 @@ exports.MurmurModule = MurmurModule = __decorate([
             pagination_module_1.PaginationModule,
             user_module_1.UserModule,
             config_1.ConfigModule,
+            (0, common_1.forwardRef)(() => timeline_module_1.TimelineModule),
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],

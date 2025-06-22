@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Murmur } from "./murmur.entity";
+import { Follow } from "./follow.entity";
 
 @Entity()
 export class User {
@@ -26,4 +27,10 @@ export class User {
 
   @OneToMany(() => Murmur, (murmur) => murmur.author)
   murmurs: Murmur[];
+
+  @OneToMany(() => Follow, (follow) => follow.followedUser)
+  followers: Follow[];
+
+  @OneToMany(() => Follow, (follow) => follow.followedBy)
+  following: Follow[];
 }

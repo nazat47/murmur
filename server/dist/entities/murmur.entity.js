@@ -16,7 +16,7 @@ let Murmur = class Murmur {
 };
 exports.Murmur = Murmur;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
 ], Murmur.prototype, "id", void 0);
 __decorate([
@@ -41,6 +41,11 @@ __decorate([
     }),
     __metadata("design:type", user_entity_1.User)
 ], Murmur.prototype, "author", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => user_entity_1.User, { cascade: true, eager: true }),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], Murmur.prototype, "likedBy", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

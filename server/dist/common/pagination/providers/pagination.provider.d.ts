@@ -5,5 +5,5 @@ import { Paginated } from "../interfaces/paginated.interface";
 export declare class PaginationProvider {
     private readonly request;
     constructor(request: Request);
-    paginateQuery<T extends ObjectLiteral>(paginationQuery: PaginationQueryDto, repository: Repository<T>, findBy?: string, findByValue?: string | number): Promise<Paginated<T>>;
+    paginateQuery<T extends ObjectLiteral>(paginationQuery: PaginationQueryDto, repository: Repository<T>, findBy?: string, orderBy?: string): Promise<Paginated<T>>;
 }

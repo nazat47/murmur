@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dtos/create-user.dto");
 const login_dto_1 = require("./dtos/login.dto");
+const active_user_decorator_1 = require("./decorators/active-user.decorator");
+const access_token_guard_1 = require("./guards/access-token.guard");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -26,6 +28,18 @@ let UserController = class UserController {
     }
     login(loginDto) {
         return this.userService.login(loginDto);
+    }
+    toggleFollow(followUserId, user) {
+        return this.userService.toggleFollowUser(user, followUserId);
+    }
+    getFollowers(user) {
+        return this.userService.getFollowers(Number(user.sub));
+    }
+    getUsers() {
+        return this.userService.getAllUsers();
+    }
+    getFollowings(user) {
+        return this.userService.getFollowings(Number(user.sub));
     }
 };
 exports.UserController = UserController;
@@ -43,6 +57,37 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)("/toggle-follow/:userId"),
+    (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
+    __param(0, (0, common_1.Param)("userId")),
+    __param(1, (0, active_user_decorator_1.ActiveUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "toggleFollow", null);
+__decorate([
+    (0, common_1.Get)("/followers"),
+    (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
+    __param(0, (0, active_user_decorator_1.ActiveUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getFollowers", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getUsers", null);
+__decorate([
+    (0, common_1.Get)("/followings"),
+    (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
+    __param(0, (0, active_user_decorator_1.ActiveUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getFollowings", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [user_service_1.UserService])

@@ -10,6 +10,8 @@ import { UserModule } from "./user/user.module";
 import { Murmur } from "./entities/murmur.entity";
 import { MurmurModule } from "./murmur/murmur.module";
 import { PaginationModule } from "./common/pagination/pagination.module";
+import { Follow } from "./entities/follow.entity";
+import { Timeline } from "./entities/timeline.entity";
 
 @Module({
   imports: [
@@ -25,13 +27,13 @@ import { PaginationModule } from "./common/pagination/pagination.module";
       type: "mysql",
       host: "localhost",
       port: 3306,
-      username: "root",
-      password: "agent47",
-      database: "murmur",
-      entities: [User, Murmur],
+      username: "docker",
+      password: "docker",
+      database: "test",
+      entities: [User, Murmur, Follow, Timeline],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Murmur, Follow, Timeline]),
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AppController],

@@ -2,6 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,7 +12,7 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Murmur {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column({
@@ -31,6 +33,10 @@ export class Murmur {
     onDelete: "CASCADE",
   })
   author: User;
+
+  @ManyToMany(() => User, { cascade: true, eager: true })
+  @JoinTable()
+  likedBy: User[];
 
   @CreateDateColumn()
   createdAt: Date;

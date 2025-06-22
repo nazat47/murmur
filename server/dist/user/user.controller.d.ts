@@ -1,11 +1,24 @@
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { LoginDto } from "./dtos/login.dto";
+import { IActiveUser } from "./interfaces/active-user.interface";
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    signUp(createUserDto: CreateUserDto): Promise<Record<string, any>>;
+    signUp(createUserDto: CreateUserDto): Promise<import("../entities/user.entity").User>;
     login(loginDto: LoginDto): Promise<{
         accessToken: string;
+    }>;
+    toggleFollow(followUserId: string, user: IActiveUser): Promise<{
+        message: string;
+    }>;
+    getFollowers(user: IActiveUser): Promise<{
+        count: number;
+        followers: import("../entities/user.entity").User[];
+    }>;
+    getUsers(): Promise<import("../entities/user.entity").User[]>;
+    getFollowings(user: IActiveUser): Promise<{
+        count: number;
+        followers: import("../entities/user.entity").User[];
     }>;
 }

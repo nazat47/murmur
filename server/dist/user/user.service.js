@@ -19,10 +19,11 @@ const user_entity_1 = require("../entities/user.entity");
 const typeorm_2 = require("typeorm");
 const bcrypt_provider_1 = require("./providers/bcrypt.provider");
 const token_provider_1 = require("./providers/token.provider");
-const class_transformer_1 = require("class-transformer");
+const follow_entity_1 = require("../entities/follow.entity");
 let UserService = class UserService {
-    constructor(userRepo, bcryptProvider, tokenProvider) {
+    constructor(userRepo, followRepo, bcryptProvider, tokenProvider) {
         this.userRepo = userRepo;
+        this.followRepo = followRepo;
         this.bcryptProvider = bcryptProvider;
         this.tokenProvider = tokenProvider;
     }
@@ -43,7 +44,7 @@ let UserService = class UserService {
                 password: hashedPassword,
             });
             newUser = await this.userRepo.save(newUser);
-            return (0, class_transformer_1.instanceToPlain)(newUser);
+            return newUser;
         }
         catch (error) {
             throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
@@ -88,12 +89,86 @@ let UserService = class UserService {
             throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
         }
     }
+    async getAllUsers() {
+        try {
+            const users = await this.userRepo.find({});
+            return users;
+        }
+        catch (error) {
+            throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
+        }
+    }
+    async toggleFollowUser(user, followUserId) {
+        try {
+            if (user.sub === Number(followUserId)) {
+                throw new common_1.BadRequestException("You cannot follow yourself");
+            }
+            const currentUser = await this.userRepo.findOneBy({ id: user.sub });
+            const userToFollow = await this.userRepo.findOneBy({
+                id: Number(followUserId),
+            });
+            if (!userToFollow) {
+                throw new common_1.NotFoundException("User to follow not found");
+            }
+            const existingFollow = await this.followRepo.findOne({
+                where: {
+                    followedBy: { id: user.sub },
+                    followedUser: { id: Number(followUserId) },
+                },
+            });
+            if (existingFollow) {
+                await this.followRepo.remove(existingFollow);
+                return { message: "Unfollowed user successfully" };
+            }
+            else {
+                const follow = this.followRepo.create({
+                    followedBy: currentUser,
+                    followedUser: userToFollow,
+                });
+                await this.followRepo.save(follow);
+                return { message: "Followed user successfully" };
+            }
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async getFollowers(userId) {
+        try {
+            const followers = await this.followRepo.find({
+                where: { followedUser: { id: userId } },
+            });
+            return {
+                count: followers.length,
+                followers: followers.map((f) => f.followedBy),
+            };
+        }
+        catch (error) {
+            throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
+        }
+    }
+    async getFollowings(userId) {
+        try {
+            const followers = await this.followRepo.find({
+                where: { followedBy: { id: userId } },
+            });
+            return {
+                count: followers.length,
+                followers: followers.map((f) => f.followedUser),
+            };
+        }
+        catch (error) {
+            throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
+        }
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __param(1, (0, typeorm_1.InjectRepository)(follow_entity_1.Follow)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         bcrypt_provider_1.BcryptProvider,
         token_provider_1.TokenProvider])
 ], UserService);
