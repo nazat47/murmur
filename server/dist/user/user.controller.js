@@ -32,8 +32,17 @@ let UserController = class UserController {
     toggleFollow(followUserId, user) {
         return this.userService.toggleFollowUser(user, followUserId);
     }
+    getUser(userId) {
+        return this.userService.findUserById(Number(userId));
+    }
+    getUserProfile(user) {
+        return this.userService.findUserById(Number(user.sub));
+    }
     getFollowers(user) {
         return this.userService.getFollowers(Number(user.sub));
+    }
+    getNonFollowings(user) {
+        return this.userService.getNonFollowings(Number(user.sub));
     }
     getUsers() {
         return this.userService.getAllUsers();
@@ -67,7 +76,23 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "toggleFollow", null);
 __decorate([
-    (0, common_1.Get)("/followers"),
+    (0, common_1.Get)("/:id"),
+    (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getUser", null);
+__decorate([
+    (0, common_1.Get)("/profile/details"),
+    (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
+    __param(0, (0, active_user_decorator_1.ActiveUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getUserProfile", null);
+__decorate([
+    (0, common_1.Get)("/my/followers"),
     (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
     __param(0, (0, active_user_decorator_1.ActiveUser)()),
     __metadata("design:type", Function),
@@ -75,13 +100,21 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getFollowers", null);
 __decorate([
+    (0, common_1.Get)("/my/non-followings"),
+    (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
+    __param(0, (0, active_user_decorator_1.ActiveUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getNonFollowings", null);
+__decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getUsers", null);
 __decorate([
-    (0, common_1.Get)("/followings"),
+    (0, common_1.Get)("/my/followings"),
     (0, common_1.UseGuards)(access_token_guard_1.AccessTokenGuard),
     __param(0, (0, active_user_decorator_1.ActiveUser)()),
     __metadata("design:type", Function),

@@ -29,10 +29,28 @@ export class UserController {
     return this.userService.toggleFollowUser(user, followUserId);
   }
 
-  @Get("/followers")
+  @Get("/:id")
+  @UseGuards(AccessTokenGuard)
+  public getUser(@Param("id") userId: string) {
+    return this.userService.findUserById(Number(userId));
+  }
+
+  @Get("/profile/details")
+  @UseGuards(AccessTokenGuard)
+  public getUserProfile(@ActiveUser() user: IActiveUser) {
+    return this.userService.findUserById(Number(user.sub));
+  }
+
+  @Get("/my/followers")
   @UseGuards(AccessTokenGuard)
   public getFollowers(@ActiveUser() user: IActiveUser) {
     return this.userService.getFollowers(Number(user.sub));
+  }
+
+  @Get("/my/non-followings")
+  @UseGuards(AccessTokenGuard)
+  public getNonFollowings(@ActiveUser() user: IActiveUser) {
+    return this.userService.getNonFollowings(Number(user.sub));
   }
 
   @Get()
@@ -40,7 +58,7 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
-  @Get("/followings")
+  @Get("/my/followings")
   @UseGuards(AccessTokenGuard)
   public getFollowings(@ActiveUser() user: IActiveUser) {
     return this.userService.getFollowings(Number(user.sub));

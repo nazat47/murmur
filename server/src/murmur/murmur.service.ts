@@ -47,8 +47,9 @@ export class MurmurService {
       const savedMurmur = await this.murmurRepository.save(murmur);
 
       const followersData = await this.userService.getFollowers(author.id);
+
       for (const follower of followersData.followers) {
-        await this.timelineService.createTimelineEntry(
+        const timeline = await this.timelineService.createTimelineEntry(
           savedMurmur.id,
           follower.id
         );
@@ -70,7 +71,8 @@ export class MurmurService {
           page: query.page,
         },
         this.murmurRepository,
-        JSON.stringify({ author: { id: user.sub } })
+        JSON.stringify({ author: { id: user.sub } }),
+        JSON.stringify({ createdAt: "DESC" })
       );
       return murmurs;
     } catch (error) {

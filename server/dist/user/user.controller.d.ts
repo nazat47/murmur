@@ -12,13 +12,16 @@ export declare class UserController {
     toggleFollow(followUserId: string, user: IActiveUser): Promise<{
         message: string;
     }>;
+    getUser(userId: string): Promise<import("../entities/user.entity").User>;
+    getUserProfile(user: IActiveUser): Promise<import("../entities/user.entity").User>;
     getFollowers(user: IActiveUser): Promise<{
         count: number;
         followers: import("../entities/user.entity").User[];
     }>;
+    getNonFollowings(user: IActiveUser): Promise<import("../entities/user.entity").User[]>;
     getUsers(): Promise<import("../entities/user.entity").User[]>;
     getFollowings(user: IActiveUser): Promise<{
         count: number;
-        followers: import("../entities/user.entity").User[];
+        followings: import("../entities/user.entity").User[];
     }>;
 }

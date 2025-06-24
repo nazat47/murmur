@@ -27,6 +27,7 @@ export declare class UserService {
     }>;
     getFollowings(userId: number): Promise<{
         count: number;
-        followers: User[];
+        followings: User[];
     }>;
+    getNonFollowings(userId: number): Promise<User[]>;
 }

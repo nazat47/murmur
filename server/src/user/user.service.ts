@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
   Injectable,
   NotFoundException,
   RequestTimeoutException,
@@ -51,9 +52,7 @@ export class UserService {
       newUser = await this.userRepo.save(newUser);
       return newUser;
     } catch (error) {
-      throw new RequestTimeoutException(
-        "Unable to process your request at the moment"
-      );
+      throw error;
     }
   }
 
@@ -81,13 +80,16 @@ export class UserService {
 
       return this.tokenProvider.generateTokens(user);
     } catch (error) {
-      throw new RequestTimeoutException(error, {
-        description: "Unable to process your request at the moment",
-      });
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment"
+      );
     }
   }
 
-  public async findUserById(id: number): Promise<User> {
+  public async findUserById(id: number) {
     try {
       const user = await this.userRepo.findOne({
         where: {
@@ -98,7 +100,6 @@ export class UserService {
       if (!user) {
         throw new NotFoundException("User not found");
       }
-
       return user;
     } catch (error) {
       throw new RequestTimeoutException(
@@ -177,18 +178,40 @@ export class UserService {
 
   async getFollowings(userId: number) {
     try {
-      const followers = await this.followRepo.find({
+      const followings = await this.followRepo.find({
         where: { followedBy: { id: userId } },
       });
 
       return {
-        count: followers.length,
-        followers: followers.map((f) => f.followedUser),
+        count: followings.length,
+        followings: followings.map((f) => f.followedUser),
       };
     } catch (error) {
       throw new RequestTimeoutException(
         "Unable to process your request at the moment"
       );
+    }
+  }
+
+  async getNonFollowings(userId: number): Promise<User[]> {
+    try {
+      const users = await this.userRepo
+        .createQueryBuilder("user")
+        .where("user.id != :userId", { userId })
+        .andWhere((qb) => {
+          const subQuery = qb
+            .subQuery()
+            .select("follow.followedUserId")
+            .from(Follow, "follow")
+            .where("follow.followedById = :userId", { userId })
+            .getQuery();
+          return "user.id NOT IN " + subQuery;
+        })
+        .getMany();
+
+      return users;
+    } catch (error) {
+      throw error;
     }
   }
 }

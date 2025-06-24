@@ -37,7 +37,7 @@ let MurmurService = class MurmurService {
             const savedMurmur = await this.murmurRepository.save(murmur);
             const followersData = await this.userService.getFollowers(author.id);
             for (const follower of followersData.followers) {
-                await this.timelineService.createTimelineEntry(savedMurmur.id, follower.id);
+                const timeline = await this.timelineService.createTimelineEntry(savedMurmur.id, follower.id);
             }
             return savedMurmur;
         }
@@ -50,7 +50,7 @@ let MurmurService = class MurmurService {
             const murmurs = await this.paginationProvider.paginateQuery({
                 limit: query.limit,
                 page: query.page,
-            }, this.murmurRepository, JSON.stringify({ author: { id: user.sub } }));
+            }, this.murmurRepository, JSON.stringify({ author: { id: user.sub } }), JSON.stringify({ createdAt: "DESC" }));
             return murmurs;
         }
         catch (error) {

@@ -47,7 +47,7 @@ let UserService = class UserService {
             return newUser;
         }
         catch (error) {
-            throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
+            throw error;
         }
     }
     async login(signInDto) {
@@ -68,9 +68,10 @@ let UserService = class UserService {
             return this.tokenProvider.generateTokens(user);
         }
         catch (error) {
-            throw new common_1.RequestTimeoutException(error, {
-                description: "Unable to process your request at the moment",
-            });
+            if (error instanceof common_1.HttpException) {
+                throw error;
+            }
+            throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
         }
     }
     async findUserById(id) {
@@ -149,16 +150,37 @@ let UserService = class UserService {
     }
     async getFollowings(userId) {
         try {
-            const followers = await this.followRepo.find({
+            const followings = await this.followRepo.find({
                 where: { followedBy: { id: userId } },
             });
             return {
-                count: followers.length,
-                followers: followers.map((f) => f.followedUser),
+                count: followings.length,
+                followings: followings.map((f) => f.followedUser),
             };
         }
         catch (error) {
             throw new common_1.RequestTimeoutException("Unable to process your request at the moment");
+        }
+    }
+    async getNonFollowings(userId) {
+        try {
+            const users = await this.userRepo
+                .createQueryBuilder("user")
+                .where("user.id != :userId", { userId })
+                .andWhere((qb) => {
+                const subQuery = qb
+                    .subQuery()
+                    .select("follow.followedUserId")
+                    .from(follow_entity_1.Follow, "follow")
+                    .where("follow.followedById = :userId", { userId })
+                    .getQuery();
+                return "user.id NOT IN " + subQuery;
+            })
+                .getMany();
+            return users;
+        }
+        catch (error) {
+            throw error;
         }
     }
 };
